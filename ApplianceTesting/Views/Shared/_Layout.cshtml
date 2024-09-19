@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebApplicationPractice</title>
+    @*     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebApplicationPractice.styles.css" asp-append-version="true" /> *@
+
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    @* <link href="~/css/boxicons.min.css" rel="stylesheet" /> *@
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet" />
+    <link href="~/css/stylesheet.css" rel="stylesheet" />
+    <link href="~/css/datatables.datatables.min.css" rel="stylesheet" />
+
+    <script src="~/js/jquery.min.js"></script>
+    <style>
+        body{
+            background-color: #F7F6FB;
+        }
+        .dropdown-toggle::after {
+            display: inline-block;
+            /* margin-left: 2.255em; */
+            vertical-align: 0.255em;
+            content: "";
+            border-top: 0.3em solid;
+            border-right: .3em solid transparent;
+            border-bottom: 0;
+            border-left: .3em solid transparent;
+        }
+    </style>
+
+    <link rel="manifest" href="~/manifest.json" />
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(function (registration) {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch(function (error) {
+                        console.error('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+</head>
+<body id="body-pd" class="body-pd">
+    @*  <header class="header" id="header">
+    <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+    <div class="header_img"> <img src="https://i.imgur.com/hczKIze.jpg" alt=""> </div>
+    <span>ADmin</span>
+    </header> *@
+    <header class="header body-pd" id="header">
+        <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+        @if (ViewBag.userName != null)
+        {
+            <div class="header_img" style="margin-left:auto"> <img src="https://w7.pngwing.com/pngs/831/88/png-transparent-user-profile-computer-icons-user-interface-mystique-miscellaneous-user-interface-design-smile-thumbnail.png" alt=""> </div>
+            <span class="mx-2">@ViewBag.userName.ToUpper()</span>
+        }
+    </header>
+
+    <div class="l-navbar show" id="nav-bar">
+        <nav class="nav">
+            <div>
+                <a href="/Master/Index" class="nav_logo"> <i class='bx bx-layer nav_logo-icon'></i> <span class="nav_logo-name">Appliance Testing</span> </a>
+                <div class="nav_list">
+                    <a class="nav_link active" asp-area="" asp-controller="Master" asp-action="Index">
+                        <i class='bx bxs-dashboard nav_icon'></i> <span class="nav_name">Dashboard</span>
+                    </a>
+
+                    <a class="nav_link" asp-area="" asp-controller="Master" asp-action="StateCityLocation">
+                        <i class='bx bxs-dashboard nav_icon'></i> <span class="nav_name">Manage Location</span>
+                    </a>
+
+                    <a class="nav_link" asp-area="" asp-controller="Home" asp-action="#">
+                        <i class='bx bxs-city nav_icon'></i> <span class="nav_name">Add Company</span>
+                    </a>
+                </div>
+            </div>
+
+            <a asp-area="" asp-controller="Home" asp-action="Login" class="nav_link"> <i class='bx bx-log-out nav_icon'></i> <span class="nav_name">SignOut</span> </a>
+        </nav>
+    </div>
+
+    <!--Container Main start-->
+    <div class="height-100 bg-light">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - WebApplicationPractice - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+
+
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+@*     <script src="~/js/bootstrap.min.js"></script> *@
+    <script src="~/js/javascript.js"></script>
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false) *@
+    <script src="~/js/sweetalert.min.js"></script>
+    <script src="~/js/datatables.min.js"></script>
+
+    @if (TempData["MsgScs"] != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                debugger
+                function showSuccessPopup(msg) {
+                    swal("Success", msg, "success");
+                }
+
+                function showErrorPopup(msg) {
+                    swal("Oops", msg, "error");
+                }
+
+                 @Html.Raw(TempData["MsgScs"].ToString())
+            });
+        </script>
+    }
+    <script>
+    // Listen for online/offline events
+    window.addEventListener('online', () => {
+
+    alert('You are back online! Syncing data...');
+    syncDataToServer(); // Sync unsynced data when back online
+    });
+
+    window.addEventListener('offline', () => {
+
+    alert('You are offline! Data will be saved locally.');
+    });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+    </script>
+</body>
+</html>

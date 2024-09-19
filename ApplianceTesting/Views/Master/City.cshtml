@@ -1,0 +1,26 @@
+﻿<div class="container card p-5" style="margin-top:5%">
+    <h3>Add City</h3>
+    <hr />
+    <div class="d-flex">
+        <form asp-action="City" asp-controller="Master" method="post">
+            <div class="mb-3">
+                <label for="txtStateName" class="form-label">State</label>
+                <select name="StateId" class="form-control">
+                    <option value="">-- Select State --</option>
+                    @foreach (var state in ViewBag.States)
+                    {
+                        <option value="@state.Id">@state.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="txtStateName" class="form-label">City</label>
+                <input type="text" name="CityName" class="form-control" id="txtCityName">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+</div>

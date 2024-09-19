@@ -1,0 +1,259 @@
+﻿@model StateModel
+@{
+    ViewData["Title"] = "Manage Location";
+   
+}
+
+<style>
+    /* Custom styles for the tabs */
+    .custom-nav {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        border-bottom: 2px solid #ccc;
+    }
+
+        .custom-nav .nav-item {
+            margin-right: 10px;
+        }
+
+        .custom-nav .tab-link {
+            display: block;
+            padding: 10px 15px;
+            color: #333;
+            text-decoration: none;
+            background-color: #f1f1f1;
+            border-radius: 5px 5px 0 0;
+        }
+
+            .custom-nav .tab-link.active {
+                background-color: #007bff;
+                color: white;
+            }
+
+    .tab-content {
+        padding: 20px;
+        /*  border: 1px solid #ccc; */
+        border-top: none;
+    }
+
+    .tab-pane {
+        display: none;
+    }
+
+        .tab-pane.show.active {
+            display: block;
+        }
+
+    .show {
+        width: unset;
+    }
+</style>
+<div class="container card p-5" style="margin-top:5%">
+    <h3>Add Locality</h3>
+    <hr />
+    <!-- Custom Tabs Nav -->
+    <ul class="custom-nav mb-3" id="tab-list" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="tab-link active" id="tab-1" href="#content-1" role="tab" aria-controls="content-1" aria-selected="true">State</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="tab-link" id="tab-2" href="#content-2" role="tab" aria-controls="content-2" aria-selected="false">City</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="tab-link" id="tab-3" href="#content-3" role="tab" aria-controls="content-3" aria-selected="false">Location</a>
+        </li>
+    </ul>
+
+    <!-- Custom Tabs Content -->
+    <div class="row">
+        <div class="col-sm-4 offset-sm-4">
+
+            <div class="tab-content">
+                <div class="tab-pane show active text-dark" id="content-1" role="tabpanel" aria-labelledby="tab-1">
+                    <form asp-action="StateCityLocation" asp-controller="Master" method="post">
+                        <div class="mb-3">
+                            <label for="txtStateName" class="form-label">State Name</label>
+                            <input type="text" name="StateName" class="form-control" id="txtStateName" placeholder="Enter State name">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+                        <button type="button" class="btn btn-success" id="syncButton" style="display:none;">Sync Data</button>
+                    </form>
+                </div>
+                <div class="tab-pane text-dark" id="content-2" role="tabpanel" aria-labelledby="tab-2">
+                    <form asp-action="StateCityLocation" asp-controller="Master" method="post">
+                        <div class="mb-3">
+                            <label for="txtStateName" class="form-label">State</label>
+                            <select name="StateId" class="form-control">
+                                <option value="">-- Select State --</option>
+                                @foreach (var state in ViewBag.States)
+                                {
+                                    <option value="@state.StateId">@state.StateName</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="txtStateName" class="form-label">City</label>
+                            <input type="text" name="CityName" class="form-control" id="txtCityName" placeholder="Enter City Name">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+                <div class="tab-pane text-dark" id="content-3" role="tabpanel" aria-labelledby="tab-3">
+                    <form asp-action="StateCityLocation" asp-controller="Master" method="post">
+                        <div class="mb-3">
+                            <label for="txtStateName" class="form-label">State</label>
+                            <select id="StateId" name="StateId" class="form-control" onchange="fetchCities(this.value)">
+                                <option value="">-- Select State --</option>
+                                @foreach (var state in ViewBag.States)
+                                {
+                                    <option value="@state.StateId">@state.StateName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="CityId">Select City</label>
+                            <select id="CityId" name="CityId" class="form-control">
+                                <option value="">-- Select City --</option>
+                                <!-- Cities will be populated here by JavaScript -->
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="txtLocationName" class="form-label">Location</label>
+                            <input type="text" name="LocationName" class="form-control" id="txtLocationName" placeholder="Enter Location Name">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <h3>Records</h3>
+    <hr />
+    <table class="table" id="myTable">
+        <thead>
+            <tr>
+                <th>State</th>
+                <th>City</th>
+                <th>Area</th>
+            </tr>
+        </thead>
+        @foreach (var item in ViewBag.location)
+        {
+            <tr>
+                <td>@item.State</td>
+                <td>@item.City</td>
+                <td>@item.Location</td>
+            </tr>
+        }
+    </table>
+
+
+</div>
+
+<!-- Tabs content -->
+<script>
+
+    function fetchCities(stateId) {
+        if (stateId) {
+            $.ajax({
+                url: '@Url.Action("GetCitiesByState", "Master")',
+                type: 'GET',
+                data: { stateId: stateId },
+                success: function (data) {
+                    var citySelect = $('#CityId');
+                    citySelect.empty(); // Clear existing options
+                    citySelect.append('<option value="">-- Select City --</option>');
+                    $.each(data, function (i, city) {
+                        debugger
+                        citySelect.append('<option value="' + city.id + '">' + city.name + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#CityId').empty().append('<option value="">-- Select City --</option>');
+        }
+    }
+</script>
+<script>
+    document.getElementById("submitButton").addEventListener("click", function () {
+        debugger
+        var stateName = document.getElementById("txtStateName").value;
+        var stateData = { StateName: stateName, CreatedDate: new Date().toISOString().split('T')[0] };
+
+        if (navigator.onLine) {
+            // If online, send data to the server
+            sendDataToServer(stateData);
+        } else {
+            // If offline, store data in local storage
+            storeDataLocally(stateData);
+        }
+    });
+
+    function sendDataToServer(stateData) {
+        debugger
+        fetch('/Master/StateCityLocation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(stateData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("State added successfully!");
+                } else {
+                    alert("Error adding state!");
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function storeDataLocally(stateData) {
+        debugger
+        let offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
+        offlineData.push(stateData);
+        localStorage.setItem("offlineData", JSON.stringify(offlineData));
+        alert("You are offline. Data is stored locally.");
+
+        // Show sync button when offline data is stored
+        document.getElementById("syncButton").style.display = "block";
+    }
+
+    document.getElementById("syncButton").addEventListener("click", function () {
+        syncOfflineData();
+    });
+
+    function syncOfflineData() {
+        debugger
+        let offlineData = JSON.parse(localStorage.getItem("offlineData"));
+
+        if (offlineData && offlineData.length > 0) {
+            offlineData.forEach(data => {
+                sendDataToServer(data);
+            });
+            localStorage.removeItem("offlineData");
+            document.getElementById("syncButton").style.display = "none";
+            alert("Offline data synced successfully!");
+        } else {
+            alert("No offline data to sync.");
+        }
+    }
+
+    // Optionally, auto-sync data when the user comes back online
+    window.addEventListener('online', function () {
+        let offlineData = JSON.parse(localStorage.getItem("offlineData"));
+        if (offlineData && offlineData.length > 0) {
+            syncOfflineData();
+        }
+    });
+
+</script>

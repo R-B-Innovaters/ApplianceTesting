@@ -1,0 +1,149 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+   Layout = null;
+}
+
+<link href="~/css/bootstrap.min.css" rel="stylesheet" />    
+<link rel="manifest" href="~/manifest.json" />
+<script src="~/js/sweetalert.min.js"></script>
+
+<style>
+    body {
+        background: rgb(7,2,80);
+        background: linear-gradient(90deg, rgba(7,2,80,1) 0%, rgba(8,8,64,1) 99%);
+    }
+
+    .divd {
+        background-color: #f8f9fa;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        /* align-items: center; */
+    }
+
+    .card {
+        /* background: linear-gradient(111.8deg, #001167 19.8%, #004e91 92.1%); */
+        background: linear-gradient(111.8deg, #ffffff 19.8%, #e3e3e3 92.1%);
+        color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 377px;
+        padding: 30px;
+        border-radius: 0;
+        border: 0px;
+    }
+
+    .form-control {
+        background-color: #e9ecef;
+        color: #001167;
+    }
+
+    .btn-primary {
+        background-color: #001167;
+        color: #ffffff;
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background-color: #0f79ab;
+        }
+
+    .hrr {
+        /* background-color: #045AFE; */
+        width: 75%;
+        height: 1px;
+        align-self: center;
+        color: #000029;
+    }
+</style>
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(function (registration) {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch(function (error) {
+                    console.error('Service Worker registration failed:', error);
+                });
+        });
+    }
+</script> 
+
+@* <style>
+    .header,.l-navbar{
+        display:none !important;
+    }
+    .pd-3{
+        padding:unset !important;
+    }
+</style> *@
+<div class="card divd">
+    <h3 class="text-center mb-4 text-dark">Login</h3>
+    <hr class="hrr" />
+    <form asp-action="Login" asp-controller="Home" method="post">
+        <div class="mb-2">
+            <label for="email" class="form-label">Email address</label>
+            <input type="text" class="form-control" id="email" placeholder="Enter your email" name="Username" required>
+        </div>
+        <div class="mb-2">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Enter your password" name="Password" required>
+        </div>
+        <div class="d-grid mt-5">
+            <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+    </form>
+</div>
+
+<script src="~/js/jquery.min.js"></script>
+@if (TempData["loginErr"] != null)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            debugger
+            function showSuccessPopup(msg) {
+                swal("Success", msg, "success");
+            }
+
+            function showErrorPopup(msg) {
+                swal("Oops", msg, "error");
+            }
+
+        @Html.Raw(TempData["loginErr"].ToString())
+                    });
+    </script>
+}
+<script>
+    $(document).ready(function () {
+        $('form').on('submit', function (event) {
+            if (!navigator.onLine) {
+                event.preventDefault();
+                validateLoginOffline();
+            }
+            // else: form will be submitted normally if online
+        });
+
+        async function validateLoginOffline() {
+            const enteredUsername = $('#email').val();
+            const enteredPassword = $('#password').val();
+
+            try {
+                debugger
+                const response = await fetch('/usrCred.json');
+                const storedCredentials = await response.json();
+
+                if (enteredUsername === storedCredentials.Username && enteredPassword === storedCredentials.Password) {
+                    window.location.href = '/Master/Index';
+                } else {
+                    swal("Oops~", "Invalid login credentials. Please try again.", "error");
+                }
+            } catch (error) {
+                console.error('Error fetching credentials:', error);
+                swal("Error", "Failed to fetch credentials. Please try again later.", "error");
+            }
+        }
+    });
+</script>
+
+
+

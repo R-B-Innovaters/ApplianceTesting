@@ -1,0 +1,56 @@
+﻿<div class="container card p-5" style="margin-top:5%">
+    <h3>Add Location</h3>
+    <hr />
+    <div class="d-flex ">
+        <form asp-action="Location" asp-controller="Master" method="post">
+            <div class="mb-3">
+                <label for="txtStateName" class="form-label">State</label>
+                <select id="StateId" name="StateId" class="form-control" onchange="fetchCities(this.value)">
+                    <option value="">-- Select State --</option>
+                    @foreach (var state in ViewBag.States)
+                    {
+                        <option value="@state.Id">@state.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="CityId">Select City</label>
+                <select id="CityId" name="CityId" class="form-control">
+                    <option value="">-- Select City --</option>
+                    <!-- Cities will be populated here by JavaScript -->
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="txtLocationName" class="form-label">Location</label>
+                <input type="text" name="LocationName" class="form-control" id="txtLocationName">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+</div>
+
+<script>
+    function fetchCities(stateId) {
+        if (stateId) {
+            $.ajax({
+                url: '@Url.Action("GetCitiesByState", "Master")',
+                type: 'GET',
+                data: { stateId: stateId },
+                success: function (data) {
+                    var citySelect = $('#CityId');
+                    citySelect.empty(); // Clear existing options
+                    citySelect.append('<option value="">-- Select City --</option>');
+                    $.each(data, function (i, city) {
+                        debugger
+                        citySelect.append('<option value="' + city.id + '">' + city.name + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#CityId').empty().append('<option value="">-- Select City --</option>');
+        }
+    }
+</script>
