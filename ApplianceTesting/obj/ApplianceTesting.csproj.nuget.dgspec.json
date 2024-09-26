@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Rochan\\source\\repos\\Bckp_AT\\ApplianceTestingSystem\\ApplianceTesting\\ApplianceTesting.csproj": {}
+    "D:\\BCA_MCA\\My Projects\\ApplianceTesting\\ApplianceTesting\\ApplianceTesting.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Rochan\\source\\repos\\Bckp_AT\\ApplianceTestingSystem\\ApplianceTesting\\ApplianceTesting.csproj": {
+    "D:\\BCA_MCA\\My Projects\\ApplianceTesting\\ApplianceTesting\\ApplianceTesting.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Rochan\\source\\repos\\Bckp_AT\\ApplianceTestingSystem\\ApplianceTesting\\ApplianceTesting.csproj",
+        "projectUniqueName": "D:\\BCA_MCA\\My Projects\\ApplianceTesting\\ApplianceTesting\\ApplianceTesting.csproj",
         "projectName": "ApplianceTesting",
-        "projectPath": "C:\\Users\\Rochan\\source\\repos\\Bckp_AT\\ApplianceTestingSystem\\ApplianceTesting\\ApplianceTesting.csproj",
+        "projectPath": "D:\\BCA_MCA\\My Projects\\ApplianceTesting\\ApplianceTesting\\ApplianceTesting.csproj",
         "packagesPath": "C:\\Users\\Rochan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Rochan\\source\\repos\\Bckp_AT\\ApplianceTestingSystem\\ApplianceTesting\\obj\\",
+        "outputPath": "D:\\BCA_MCA\\My Projects\\ApplianceTesting\\ApplianceTesting\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Rochan\\AppData\\Roaming\\NuGet\\NuGet.Config",
