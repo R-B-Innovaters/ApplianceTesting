@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Rochan\\source\\repos\\ApplianceTesting\\ApplianceTesting\\ApplianceTesting.csproj": {}
+    "C:\\Users\\Rochan\\source\\repos\\Bckp_AT\\ApplianceTestingSystem\\ApplianceTesting\\ApplianceTesting.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Rochan\\source\\repos\\ApplianceTesting\\ApplianceTesting\\ApplianceTesting.csproj": {
+    "C:\\Users\\Rochan\\source\\repos\\Bckp_AT\\ApplianceTestingSystem\\ApplianceTesting\\ApplianceTesting.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Rochan\\source\\repos\\ApplianceTesting\\ApplianceTesting\\ApplianceTesting.csproj",
+        "projectUniqueName": "C:\\Users\\Rochan\\source\\repos\\Bckp_AT\\ApplianceTestingSystem\\ApplianceTesting\\ApplianceTesting.csproj",
         "projectName": "ApplianceTesting",
-        "projectPath": "C:\\Users\\Rochan\\source\\repos\\ApplianceTesting\\ApplianceTesting\\ApplianceTesting.csproj",
+        "projectPath": "C:\\Users\\Rochan\\source\\repos\\Bckp_AT\\ApplianceTestingSystem\\ApplianceTesting\\ApplianceTesting.csproj",
         "packagesPath": "C:\\Users\\Rochan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Rochan\\source\\repos\\ApplianceTesting\\ApplianceTesting\\obj\\",
+        "outputPath": "C:\\Users\\Rochan\\source\\repos\\Bckp_AT\\ApplianceTestingSystem\\ApplianceTesting\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Rochan\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,9 +40,19 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
-            "Microsoft.AspNetCore.Session": {
+            "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[2.1.1, )"
+              "version": "[6.0.33, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[6.0.33, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[6.0.33, )"
             },
             "System.Data.SqlClient": {
               "target": "Package",

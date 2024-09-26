@@ -1,7 +1,10 @@
-﻿namespace ApplianceTesting.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ApplianceTesting.Models
 {
     public class StateModel
     {
+        [Key]
         public int StateId { get; set; }
         public string StateName { get; set; }
         public string CreatedDate { get; set; }

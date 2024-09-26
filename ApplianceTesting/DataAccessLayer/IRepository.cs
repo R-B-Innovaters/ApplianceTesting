@@ -10,24 +10,15 @@ namespace ApplianceTesting.DataAccessLayer.Repository
     }
     public interface IHomeControl
     {
-        List<LoginModel> CheckLogin(string usr, string paswd);
+        UserModel GetUser(string username, string password);
     }
+
     public interface IMasterControl
     {
-        //string AddState(StateModel objStateMOdel);
-        string CommonInsertOperation(object objModel,string tblName);
-
-        public List<Dictionary<string, object>> GetRecords(string tableName, string columnList, string join = null, string condition = null);
+        public List<StateModel> GetStateRecords();
+        public List<CityModel> GetCityRecords(int stateId);
+        bool InsertModel(object objModel);
+        public List<NumCounts> GetCounts();
+        public List<LocationModel> GetStateCityLocRecords();
     }
-    //public interface IRestaurant
-    //{
-    //    //RESTAURANT REGISTRATION
-    //    List<Restaurant_Info_Model> GetRestaurants();
-    //    string AddRestaurant(Restaurant_Info_Model objRestaurantInfo);
-
-    //    Restaurant_Info_Model GetRestaurantById(Guid id);
-    //    string UpdateRestaurant(Restaurant_Info_Model objRestaurantInfo);
-    //    void DeleteRestaurant(Guid id);
-
-    //}
 }

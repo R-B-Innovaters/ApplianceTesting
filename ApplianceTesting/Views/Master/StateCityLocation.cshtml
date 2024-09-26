@@ -1,8 +1,6 @@
-﻿@model StateModel
-@{
-    ViewData["Title"] = "Manage Location";
-   
-}
+﻿@* @model StateModel *@
+
+@* <script src="https://cdnjs.cloudflare.com/ajax/libs/dexie/3.2.2/dexie.min.js"></script> *@
 
 <style>
     /* Custom styles for the tabs */
@@ -78,7 +76,8 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
-                        <button type="button" class="btn btn-success" id="syncButton" style="display:none;">Sync Data</button>
+                        <button type="button" onclick="syncData()" class="btn btn-success">Sync Data</button>
+
                     </form>
                 </div>
                 <div class="tab-pane text-dark" id="content-2" role="tabpanel" aria-labelledby="tab-2">
@@ -87,10 +86,11 @@
                             <label for="txtStateName" class="form-label">State</label>
                             <select name="StateId" class="form-control">
                                 <option value="">-- Select State --</option>
-                                @foreach (var state in ViewBag.States)
-                                {
-                                    <option value="@state.StateId">@state.StateName</option>
-                                }
+                                @if (ViewBag.States != null)
+                                    foreach (var state in ViewBag.States)
+                                    {
+                                        <option value="@state.StateId">@state.StateName</option>
+                                    }  }
                             </select>
                         </div>
 
@@ -108,10 +108,11 @@
                             <label for="txtStateName" class="form-label">State</label>
                             <select id="StateId" name="StateId" class="form-control" onchange="fetchCities(this.value)">
                                 <option value="">-- Select State --</option>
-                                @foreach (var state in ViewBag.States)
-                                {
-                                    <option value="@state.StateId">@state.StateName</option>
-                                }
+                                @if (ViewBag.States != null)
+                                    foreach (var state in ViewBag.States)
+                                    {
+                                        <option value="@state.StateId">@state.StateName</option>
+                                    }  }
                             </select>
                         </div>
                         <div class="mb-3">
@@ -145,14 +146,18 @@
                 <th>Area</th>
             </tr>
         </thead>
-        @foreach (var item in ViewBag.location)
+        @if (ViewBag.locations != null)
         {
-            <tr>
-                <td>@item.State</td>
-                <td>@item.City</td>
-                <td>@item.Location</td>
-            </tr>
+            foreach (var item in ViewBag.locations)
+            {
+                <tr>
+                    <td>@item.LocationName</td>
+                    <td>@item.CityName</td>
+                    <td>@item.StateName</td>
+                </tr>
+            }
         }
+
     </table>
 
 
@@ -160,7 +165,18 @@
 
 <!-- Tabs content -->
 <script>
-
+    $(document).ready(function () {
+        $('.tab-link').on('click', function (e) {
+            e.preventDefault();
+            $('.tab-link').removeClass('active');
+            $('.tab-pane').removeClass('show active');
+            $(this).addClass('active');
+            var contentId = $(this).attr('href');
+            $(contentId).addClass('show active');
+        });
+    });
+</script>
+<script>
     function fetchCities(stateId) {
         if (stateId) {
             $.ajax({
@@ -182,78 +198,82 @@
         }
     }
 </script>
-<script>
-    document.getElementById("submitButton").addEventListener("click", function () {
+
+@* <script>
+    // Create Dexie database instance for storing state data offline
+    var db = new Dexie("StateDatabase");
+
+    // Define a State table
+    db.version(1).stores({
+        states: "++id, stateName"
+    });
+
+    // Function to submit the form data (offline mode)
+    function submitStateForm() {
         debugger
-        var stateName = document.getElementById("txtStateName").value;
-        var stateData = { StateName: stateName, CreatedDate: new Date().toISOString().split('T')[0] };
+        var stateName = $('#txtStateName').val();
 
         if (navigator.onLine) {
-            // If online, send data to the server
-            sendDataToServer(stateData);
-        } else {
-            // If offline, store data in local storage
-            storeDataLocally(stateData);
-        }
-    });
-
-    function sendDataToServer(stateData) {
-        debugger
-        fetch('/Master/StateCityLocation', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(stateData)
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("State added successfully!");
-                } else {
-                    alert("Error adding state!");
+            // If online, submit directly to the server
+            $.ajax({
+                url: '@Url.Action("StateCityLocation", "Master")',
+                type: 'POST',
+                data: { StateName: stateName },
+                success: function (response) {
+                    alert('State saved online successfully');
+                },
+                error: function () {
+                    alert('Failed to save state online');
                 }
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    function storeDataLocally(stateData) {
-        debugger
-        let offlineData = JSON.parse(localStorage.getItem("offlineData")) || [];
-        offlineData.push(stateData);
-        localStorage.setItem("offlineData", JSON.stringify(offlineData));
-        alert("You are offline. Data is stored locally.");
-
-        // Show sync button when offline data is stored
-        document.getElementById("syncButton").style.display = "block";
-    }
-
-    document.getElementById("syncButton").addEventListener("click", function () {
-        syncOfflineData();
-    });
-
-    function syncOfflineData() {
-        debugger
-        let offlineData = JSON.parse(localStorage.getItem("offlineData"));
-
-        if (offlineData && offlineData.length > 0) {
-            offlineData.forEach(data => {
-                sendDataToServer(data);
             });
-            localStorage.removeItem("offlineData");
-            document.getElementById("syncButton").style.display = "none";
-            alert("Offline data synced successfully!");
         } else {
-            alert("No offline data to sync.");
+            // If offline, save state data to IndexedDB
+            db.states.add({
+                stateName: stateName
+            }).then(function () {
+                alert('State saved offline successfully');
+            }).catch(function (error) {
+                console.error("Error saving state data offline: ", error);
+            });
         }
     }
 
-    // Optionally, auto-sync data when the user comes back online
-    window.addEventListener('online', function () {
-        let offlineData = JSON.parse(localStorage.getItem("offlineData"));
-        if (offlineData && offlineData.length > 0) {
-            syncOfflineData();
-        }
+    // Function to sync offline state data to the server when back online
+    function syncStateData() {
+        db.states.toArray().then(function (states) {
+            if (states.length > 0) {
+                $.ajax({
+                    url: '@Url.Action("StateCityLocation", "Master")',
+                    type: 'POST',
+                    data: { states: JSON.stringify(states) }, // Send offline states as an array
+                    success: function () {
+                        debugger
+                        alert('Offline data synced successfully');
+                        db.states.clear(); // Clear offline data after sync
+                    },
+                    error: function () {
+                        alert('Failed to sync offline data');
+                    }
+                });
+            } else {
+                alert('No offline data to sync');
+            }
+        }).catch(function (error) {
+            console.error("Error fetching offline data: ", error);
+        });
+    }
+
+    // Listen for network changes to enable/disable the sync button
+    window.addEventListener('online', () => {
+        $('#syncBtn').prop('disabled', false);
     });
 
-</script>
+    window.addEventListener('offline', () => {
+        $('#syncBtn').prop('disabled', true);
+    });
+
+    // Initially disable the sync button if offline
+    if (!navigator.onLine) {
+        $('#syncBtn').prop('disabled', true);
+    }
+</script> *@

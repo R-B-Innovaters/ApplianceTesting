@@ -1,22 +1,23 @@
+using ApplianceTesting.DataAccessLayer;
 using ApplianceTesting.DataAccessLayer.Repository;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddProgressiveWebApp();
-builder.Services.AddScoped<IHomeControl, LoginManageRepository>();
-builder.Services.AddScoped<IMasterControl, MasterPageRepository>();
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddDbContext<ApplianceTestingDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IHomeControl,LoginManageRepository>();
+builder.Services.AddScoped<IMasterControl, MasterManageRepository>();
 
 // Configure session options
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(300); // Set session timeout
-});
-
+builder.Services.AddSession();
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
