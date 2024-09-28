@@ -46,6 +46,7 @@
     .show {
         width: unset;
     }
+
 </style>
 <div class="container card p-5" style="margin-top:5%">
     <h3>Add Locality</h3>
@@ -65,100 +66,200 @@
 
     <!-- Custom Tabs Content -->
     <div class="row">
-        <div class="col-sm-4 offset-sm-4">
+        <div class="col-sm-12">
 
             <div class="tab-content">
+                <!--TAB 1-->
+
                 <div class="tab-pane show active text-dark" id="content-1" role="tabpanel" aria-labelledby="tab-1">
-                    <form asp-action="StateCityLocation" asp-controller="Master" method="post">
-                        <div class="mb-3">
-                            <label for="txtStateName" class="form-label">State Name</label>
-                            <input type="text" name="StateName" class="form-control" id="txtStateName" placeholder="Enter State name">
+                    <div class="row">
+                        <div class="col-sm-4 offset-sm-4">
+
+                            <form asp-action="StateCityLocation" asp-controller="Master" method="post">
+                                <div class="mb-3">
+                                    <label for="txtStateName" class="form-label">State Name</label>
+                                    <input type="text" name="StateName" class="form-control" id="txtStateName" placeholder="Enter State name">
+                                </div>
+
+                                <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>@*
+                                <button type="button" onclick="syncData()" class="btn btn-success">Sync Data</button> *@
+
+                            </form>
+
+                        </div>
+                        <div class="col-sm-12">
+                            <!--State List-->
+                            <h3>Records</h3>
+                            <hr />
+                            <table class="table mytable">
+                                <thead>
+                                    <tr>
+                                        <th>State</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                @if (ViewBag.locations != null)
+                                {
+                                    foreach (var item in ViewBag.States)
+                                    {
+                                        <tr>
+                                            <td>@item.StateName</td>
+                                            <td>
+                                                <label class="switch">
+                                                    <input type="checkbox" class="status-switch" data-id="@item.StateId" data-table="StateMaster" @(item.StateStatus ? "checked" : "") data-idcolumn="StateId" data-stcolumn="StateStatus">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </td>
+
+                                        </tr>
+                                    }
+                                }
+
+                            </table>
+                            <!---->
                         </div>
 
-                        <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
-                        <button type="button" onclick="syncData()" class="btn btn-success">Sync Data</button>
-
-                    </form>
+                    </div>
                 </div>
+                <!--TAB 2-->
                 <div class="tab-pane text-dark" id="content-2" role="tabpanel" aria-labelledby="tab-2">
-                    <form asp-action="StateCityLocation" asp-controller="Master" method="post">
-                        <div class="mb-3">
-                            <label for="txtStateName" class="form-label">State</label>
-                            <select name="StateId" class="form-control">
-                                <option value="">-- Select State --</option>
-                                @if (ViewBag.States != null)
-                                    foreach (var state in ViewBag.States)
+                    <div class="row">
+                        <div class="col-sm-4 offset-sm-4">
+                            <form asp-action="StateCityLocation" asp-controller="Master" method="post">
+                                <div class="mb-3">
+                                    <label for="txtStateName" class="form-label">State</label>
+                                    <select name="StateId" class="form-control">
+                                        <option value="">-- Select State --</option>
+                                        @if (ViewBag.States != null)
+                                            foreach (var state in ViewBag.States)
+                                            {
+                                                <option value="@state.StateId">@state.StateName</option>
+                                            }  }
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="txtStateName" class="form-label">City</label>
+                                    <input type="text" name="CityName" class="form-control" id="txtCityName" placeholder="Enter City Name">
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+
+                        </div>
+                        <div class="col-sm-12">
+                            <!--City List-->
+                            <h3>Records</h3>
+                            <hr />
+                            <table class="table mytable">
+                                <thead>
+                                    <tr>
+                                        <th>City</th>
+                                        <th>State</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                @if (ViewBag.locations != null)
+                                {
+                                    foreach (var item in ViewBag.Cities)
                                     {
-                                        <option value="@state.StateId">@state.StateName</option>
-                                    }  }
-                            </select>
-                        </div>
+                                        <tr>
+                                            <td>@item.CityName</td>
+                                            <td>@item.StateName</td>
+                                            <td>
+                                                <label class="switch">
+                                                    <input type="checkbox" class="status-switch" data-id="@item.CityId" data-table="CityMaster" @(item.CityStatus ? "checked" : "") data-idcolumn="CityId" data-stcolumn="CityStatus">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </td>
 
-                        <div class="mb-3">
-                            <label for="txtStateName" class="form-label">City</label>
-                            <input type="text" name="CityName" class="form-control" id="txtCityName" placeholder="Enter City Name">
-                        </div>
+                                        </tr>
+                                    }
+                                }
 
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
+                            </table>
+                            <!---->
+                        </div>
+                    </div>
                 </div>
+                <!--TAB 3-->
                 <div class="tab-pane text-dark" id="content-3" role="tabpanel" aria-labelledby="tab-3">
-                    <form asp-action="StateCityLocation" asp-controller="Master" method="post">
-                        <div class="mb-3">
-                            <label for="txtStateName" class="form-label">State</label>
-                            <select id="StateId" name="StateId" class="form-control" onchange="fetchCities(this.value)">
-                                <option value="">-- Select State --</option>
-                                @if (ViewBag.States != null)
-                                    foreach (var state in ViewBag.States)
+
+                    <div class="row">
+                        <div class="col-sm-4 offset-sm-4">
+
+                            <form asp-action="StateCityLocation" asp-controller="Master" method="post">
+                                <div class="mb-3">
+                                    <label for="txtStateName" class="form-label">State</label>
+                                    <select id="StateId" name="StateId" class="form-control" onchange="fetchCities(this.value)">
+                                        <option value="">-- Select State --</option>
+                                        @if (ViewBag.States != null)
+                                            foreach (var state in ViewBag.States)
+                                            {
+                                                <option value="@state.StateId">@state.StateName</option>
+                                            }  }
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="CityId">Select City</label>
+                                    <select id="CityId" name="CityId" class="form-control">
+                                        <option value="">-- Select City --</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="txtLocationName" class="form-label">Location</label>
+                                    <input type="text" name="LocationName" class="form-control" id="txtLocationName" placeholder="Enter Location Name">
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+
+                        </div>
+                        <div class="col-sm-12">
+                            <!--Location List-->
+                            <h3>Records</h3>
+                            <hr />
+                            <table class="table mytable">
+                                <thead>
+                                    <tr>
+                                        <th>Area</th>
+                                        <th>City</th>
+                                        <th>State</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                @if (ViewBag.locations != null)
+                                {
+                                    foreach (var item in ViewBag.locations)
                                     {
-                                        <option value="@state.StateId">@state.StateName</option>
-                                    }  }
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="CityId">Select City</label>
-                            <select id="CityId" name="CityId" class="form-control">
-                                <option value="">-- Select City --</option>
-                                <!-- Cities will be populated here by JavaScript -->
-                            </select>
-                        </div>
+                                        <tr>
+                                            <td>@item.LocationName</td>
+                                            <td>@item.CityName</td>
+                                            <td>@item.StateName</td>
+                                            <td>
+                                                <label class="switch">
+                                                    <input type="checkbox" class="status-switch" data-id="@item.LocationId" data-table="LocationMaster" @(item.LocationStatus ? "checked" : "") data-idcolumn="LocationId" data-stcolumn="LocationStatus">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </td>
 
-                        <div class="mb-3">
-                            <label for="txtLocationName" class="form-label">Location</label>
-                            <input type="text" name="LocationName" class="form-control" id="txtLocationName" placeholder="Enter Location Name">
-                        </div>
+                                        </tr>
+                                    }
+                                }
 
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
+                            </table>
+                            <!---->
+                        </div>
+                    </div>
                 </div>
+
+
+
+
             </div>
         </div>
     </div>
-
-
-    <h3>Records</h3>
-    <hr />
-    <table class="table" id="myTable">
-        <thead>
-            <tr>
-                <th>State</th>
-                <th>City</th>
-                <th>Area</th>
-            </tr>
-        </thead>
-        @if (ViewBag.locations != null)
-        {
-            foreach (var item in ViewBag.locations)
-            {
-                <tr>
-                    <td>@item.LocationName</td>
-                    <td>@item.CityName</td>
-                    <td>@item.StateName</td>
-                </tr>
-            }
-        }
-
-    </table>
 
 
 </div>
@@ -176,6 +277,7 @@
         });
     });
 </script>
+<!--AJAX get city list bind-->
 <script>
     function fetchCities(stateId) {
         if (stateId) {
@@ -198,6 +300,35 @@
         }
     }
 </script>
+<!--AJX UpdateStatus-->
+@* <script>
+    $(document).ready(function () {
+        $('.switch input[type="checkbox"]').change(function () {
+            var locationId = $(this).data('id'); // Assuming you add a data-id attribute
+            var status = $(this).is(':checked');
+
+            $.ajax({
+                url: '@Url.Action("UpdateLocationStatus", "Master")',
+                type: 'POST',
+                data: {
+                    id: locationId,
+                    status: status
+                },
+                success: function (response) {
+                    if (response.success) {
+                        swal("Success", 'Status Updated Successfully.', "success");
+                    } else {
+                        swal("Oops", 'Error Updating Status', "error");
+                    }
+                },
+                error: function () {
+                    console.log('Error occurred during the request.');
+                }
+            });
+        });
+    });
+</script> *@
+
 
 @* <script>
     // Create Dexie database instance for storing state data offline

@@ -26,25 +26,61 @@ namespace ApplianceTesting.DataAccessLayer.Repository
             //   StateName = s.StateName 
             //}).ToList();
             //return sList;
-            var stateList = _db.StateMaster.Select(s => new { s.StateId, s.StateName }).ToList();
+            var stateList = _db.StateMaster.Select(s => new { s.StateId, s.StateName,s.StateStatus }).ToList();
             List<StateModel> sList = stateList.Select(s => new StateModel
             {
                 StateId = s.StateId,
-                StateName = s.StateName
+                StateName = s.StateName,
+                StateStatus =s.StateStatus
             }).ToList();
             return sList;
         }
 
-        public List<CityModel> GetCityRecords(int stateId)
+        public List<CityViewModel> GetCityRecords(int? stateId)
         {
-            var cityList = _db.CityMaster.Select(s => new { s.CityId, s.CityName,s.StateId }).Where(s=>s.StateId == stateId).ToList();
-            List<CityModel> cList = cityList.Select(s => new CityModel
+            if (stateId != null)
             {
-                CityId = s.CityId,
-                CityName = s.CityName
+                var cityList = _db.CityMaster.Select(s => new { s.CityId, s.CityName, s.StateId,s.CityStatus }).Where(s => s.StateId == stateId).ToList();
+                List<CityViewModel> cList = cityList.Select(s => new CityViewModel
+                {
+                    CityId = s.CityId,
+                    CityName = s.CityName,
+                    CityStatus=s.CityStatus
+                }).ToList();
+                return cList;
+            }
+            else
+            {
+                var cityList = (from ct in _db.CityMaster
+                                 join state in _db.StateMaster on ct.StateId equals state.StateId
+                                 select new 
+                                 {
+                                     ct.CityId,
+                                     ct.CityName,
+                                     ct.CityStatus,
+                                     state.StateName
+                                 }).ToList();
+                List<CityViewModel> cList = cityList.Select(s => new CityViewModel
+                {
+                    CityId = s.CityId,
+                    CityName = s.CityName,
+                    StateName=s.StateName,
+                    CityStatus= s.CityStatus
+                }).ToList();
+                return cList;
+            }
+            
+        }
+        public List<LocationModel> GetLocationRecords(int cityId)
+        {
+            var locationList = _db.LocationMaster.Select(s => new { s.LocationId, s.LocationName, s.CityId }).Where(s => s.CityId == cityId).ToList();
+            List<LocationModel> lList = locationList.Select(s => new LocationModel
+            {
+                LocationId = s.LocationId,
+                LocationName = s.LocationName
             }).ToList();
 
-            return cList;
+            return lList;
         }
         public List<NumCounts> GetCounts()
         {
@@ -61,26 +97,50 @@ namespace ApplianceTesting.DataAccessLayer.Repository
 
             return new List<NumCounts> { counts };
         }
-        public List<LocationModel> GetStateCityLocRecords()
+        public List<LocationViewModel> GetStateCityLocRecords()
         {
-            var locations = from l in _db.LocationMaster
-                            join c in _db.CityMaster on l.CityId equals c.CityId
-                            join s in _db.StateMaster on c.StateId equals s.StateId
-                            select new 
-                            {
-                             l.LocationName,
-                             c.CityName,
-                             s.StateName
-                            };
-            List<LocationModel> lList = locations.Select(s => new LocationModel
-            {
-                LocationName = s.LocationName,
-                CityName = s.CityName,
-                StateName = s.StateName,
-            }).ToList();
-            return lList;
+            var locations = (from loc in _db.LocationMaster
+                             join city in _db.CityMaster on loc.CityId equals city.CityId
+                             join state in _db.StateMaster on city.StateId equals state.StateId
+                             select new LocationViewModel
+                             {
+                                 LocationId = loc.LocationId,
+                                 LocationName = loc.LocationName,
+                                 CityName = city.CityName,
+                                 StateName = state.StateName,
+                                 LocationStatus = loc.LocationStatus
+                             }).ToList();
+
+            return locations;
         }
-   
+        public List<CompanyModel> GetCompanies()
+        {
+            var c_list = from l in _db.CompanyMaster
+                         select new
+                         {
+                             l.CompanyId,
+                             l.CompanyName,
+                             l.CompanyNumber,
+                             l.CompanyEmail,
+                             l.CompanyAddress,
+                             l.ContactNo,
+                             l.CompRegistrationDate,
+                             l.CompanyStatus
+                         };
+            List<CompanyModel> compList = c_list.Select(s => new CompanyModel
+            {
+                CompanyName = s.CompanyName,
+                CompanyId = s.CompanyId,
+                CompanyNumber = s.CompanyNumber,
+                CompanyEmail = s.CompanyEmail,
+                CompanyAddress = s.CompanyAddress,
+                CompanyStatus = Convert.ToBoolean(s.CompanyStatus),
+                CompRegistrationDate = s.CompRegistrationDate,
+                ContactNo = s.ContactNo
+            }).ToList();
+            return compList;
+        }
+
         public bool InsertModel(object objModel)
         {
             try
@@ -104,7 +164,61 @@ namespace ApplianceTesting.DataAccessLayer.Repository
                 return false;
             }
         }
+        public bool UpdateStatusModel(string dbSetName, string idField, int id, string statusField, bool statusValue)
+        {
+            try
+            {
+                // Get the DbSet from the context dynamically using reflection
+                var dbSetProperty = _db.GetType().GetProperty(dbSetName);
+                if (dbSetProperty == null)
+                {
+                    Console.WriteLine($"DbSet '{dbSetName}' not found.");
+                    return false;
+                }
 
+                // Get the DbSet object (of type DbSet<T>)
+                var dbSet = dbSetProperty.GetValue(_db) as IQueryable;
+                if (dbSet == null)
+                {
+                    Console.WriteLine($"Could not retrieve DbSet for '{dbSetName}'.");
+                    return false;
+                }
+
+                // Switch to client-side evaluation by materializing the query first (fetch entity by ID)
+                var entity = dbSet.Cast<object>()
+                                  .AsEnumerable() // Forces client-side evaluation
+                                  .FirstOrDefault(e => e.GetType().GetProperty(idField).GetValue(e).Equals(id));
+
+                if (entity == null)
+                {
+                    Console.WriteLine($"Entity with ID {id} not found.");
+                    return false;
+                }
+
+                // Use reflection to set the status field
+                var property = entity.GetType().GetProperty(statusField);
+                if (property != null && property.CanWrite)
+                {
+                    property.SetValue(entity, statusValue);
+                }
+                else
+                {
+                    Console.WriteLine($"Property '{statusField}' not found or is not writable.");
+                    return false;
+                }
+
+                // Save changes to the database
+                _db.SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception if necessary
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
 
     }
 

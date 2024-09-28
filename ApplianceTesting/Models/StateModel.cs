@@ -7,11 +7,11 @@ namespace ApplianceTesting.Models
         [Key]
         public int StateId { get; set; }
         public string StateName { get; set; }
-        public string CreatedDate { get; set; }
-        public string CreatedBy { get; set; }
-        public string ModifiedDate { get; set; }
-        public string ModifiedBy { get; set; }
-
+        public DateTime CreatedDate { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public int? ModifiedBy { get; set; }
+        public bool StateStatus { get; set; }
 
     }
 }

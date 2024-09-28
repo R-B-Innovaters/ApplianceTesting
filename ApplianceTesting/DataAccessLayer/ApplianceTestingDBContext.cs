@@ -14,6 +14,8 @@ namespace ApplianceTesting.DataAccessLayer
         public DbSet<CityModel> CityMaster { get; set; }
         public DbSet<LocationModel> LocationMaster { get; set; }
         public DbSet<UserModel> UserMaster { get; set; }
+        public DbSet<CompanyModel> CompanyMaster { get; set; }
+        public DbSet<ContractModel> ContractMaster { get; set; }
     }
 
 }

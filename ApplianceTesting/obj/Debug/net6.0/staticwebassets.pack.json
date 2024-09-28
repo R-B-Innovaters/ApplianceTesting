@@ -25,6 +25,10 @@
       "PackagePath": "staticwebassets\\css\\dataTables.dataTables.min.css"
     },
     {
+      "Id": "D:\\BCA_MCA\\My Projects\\ApplianceTesting\\ApplianceTesting\\wwwroot\\css\\flatpickr.min.css",
+      "PackagePath": "staticwebassets\\css\\flatpickr.min.css"
+    },
+    {
       "Id": "D:\\BCA_MCA\\My Projects\\ApplianceTesting\\ApplianceTesting\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
@@ -59,6 +63,10 @@
     {
       "Id": "D:\\BCA_MCA\\My Projects\\ApplianceTesting\\ApplianceTesting\\wwwroot\\js\\dataTables.min.js",
       "PackagePath": "staticwebassets\\js\\dataTables.min.js"
+    },
+    {
+      "Id": "D:\\BCA_MCA\\My Projects\\ApplianceTesting\\ApplianceTesting\\wwwroot\\js\\flatpickr.js",
+      "PackagePath": "staticwebassets\\js\\flatpickr.js"
     },
     {
       "Id": "D:\\BCA_MCA\\My Projects\\ApplianceTesting\\ApplianceTesting\\wwwroot\\js\\jquery.min.js",

@@ -13,7 +13,7 @@
     <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet" />
     <link href="~/css/stylesheet.css" rel="stylesheet" />
     <link href="~/css/datatables.datatables.min.css" rel="stylesheet" />
-
+    <link href="~/css/flatpickr.min.css" rel="stylesheet" />
     <script src="~/js/jquery.min.js"></script>
     <style>
         body {
@@ -33,18 +33,18 @@
     </style>
 
     <link rel="manifest" href="~/manifest.json" />
-   @*  <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(function (registration) {
-                        console.log('Service Worker registered with scope:', registration.scope);
-                    })
-                    .catch(function (error) {
-                        console.error('Service Worker registration failed:', error);
-                    });
-            });
-        }
+    @*  <script>
+    if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/service-worker.js')
+    .then(function (registration) {
+    console.log('Service Worker registered with scope:', registration.scope);
+    })
+    .catch(function (error) {
+    console.error('Service Worker registration failed:', error);
+    });
+    });
+    }
     </script> *@
 </head>
 <body id="body-pd" class="body-pd">
@@ -55,11 +55,11 @@
     </header> *@
     <header class="header body-pd" id="header">
         <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
-        <i id="onlineOffline" class="bx bx-radio-circle-marked" style="font-size:xx-large;" ></i>
-        
-            <div class="header_img" style="margin-left:auto"> <img src="https://w7.pngwing.com/pngs/831/88/png-transparent-user-profile-computer-icons-user-interface-mystique-miscellaneous-user-interface-design-smile-thumbnail.png" alt=""> </div>
-            <span class="mx-2">@ViewBag.Data</span>
-      
+        <i id="onlineOffline" class="bx bx-radio-circle-marked" style="font-size:xx-large;"></i>
+
+        <div class="header_img" style="margin-left:auto"> <img src="https://w7.pngwing.com/pngs/831/88/png-transparent-user-profile-computer-icons-user-interface-mystique-miscellaneous-user-interface-design-smile-thumbnail.png" alt=""> </div>
+        <span class="mx-2">@ViewBag.Data</span>
+
     </header>
 
     <div class="l-navbar show" id="nav-bar">
@@ -75,7 +75,7 @@
                         <i class='bx bxs-dashboard nav_icon'></i> <span class="nav_name">Manage Location</span>
                     </a>
 
-                    <a class="nav_link" asp-area="" asp-controller="Home" asp-action="#">
+                    <a class="nav_link" asp-area="" asp-controller="Master" asp-action="AddCompany">
                         <i class='bx bxs-city nav_icon'></i> <span class="nav_name">Add Company</span>
                     </a>
                 </div>
@@ -100,7 +100,7 @@
 
 
 
-    <script src="~/js/jquery.min.js"></script>
+
     <script src="~/js/bootstrap.bundle.min.js"></script>
     @*     <script src="~/js/bootstrap.min.js"></script> *@
     <script src="~/js/javascript.js"></script>
@@ -110,6 +110,7 @@
     @await RenderSectionAsync("Scripts", required: false) *@
     <script src="~/js/sweetalert.min.js"></script>
     <script src="~/js/datatables.min.js"></script>
+    <script src="~/js/flatpickr.js"></script>
 
     @if (TempData["MsgScs"] != null)
     {
@@ -124,21 +125,61 @@
                     swal("Oops", msg, "error");
                 }
             @Html.Raw(TempData["MsgScs"].ToString())
-                        });
+                                    });
         </script>
     }
-  @*   <script>
-        // Listen for online/offline events
-        window.addEventListener('online', () => {
 
-            alert('You are back online! Syncing data...');
-            syncDataToServer(); // Sync unsynced data when back online
+    <script>
+        $(document).ready(function () {
+            // Function to handle status update
+            function handleStatusUpdate() {
+                debugger
+                var Id = $(this).data('id');
+                var status = $(this).is(':checked');
+                var tableName = $(this).data('table'); 
+                var idColumn = $(this).data('idcolumn');
+                var stColumn = $(this).data('stcolumn');
+                // AJAX call
+                $.ajax({
+                    url: '/Master/UpdateStatus',
+                    type: 'POST',
+                    data: {
+                        id: Id,
+                        status: status,
+                        tableName: tableName,
+                        idColumn:idColumn,
+                        stColumn:stColumn
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            swal('Success', 'Status Updated Successfully.', 'success');
+                        } else {
+                            swal('Oops', 'Error Updating Status', 'error');
+                        }
+                    },
+                    error: function () {
+                        console.log('Error occurred during the request.');
+                    }
+                });
+            }
+
+            // Attach the function globally to any checkbox with the class 'status-switch'
+            $(document).on('change', '.status-switch', handleStatusUpdate);
         });
 
-        window.addEventListener('offline', () => {
+    </script>
+    @*   <script>
+    // Listen for online/offline events
+    window.addEventListener('online', () => {
 
-            alert('You are offline! Data will be saved locally.');
-        });
+    alert('You are back online! Syncing data...');
+    syncDataToServer(); // Sync unsynced data when back online
+    });
+
+    window.addEventListener('offline', () => {
+
+    alert('You are offline! Data will be saved locally.');
+    });
     </script> *@
     <script>
         // Listen for online/offline events
@@ -165,7 +206,15 @@
     </script>
     <script>
         $(document).ready(function () {
-            $('#myTable').DataTable();
+            // $('.datatableCss').DataTable();
+            var table = $('.mytable').DataTable({
+
+                scrollX: true
+            });
+            $('#datepicker').flatpickr({
+                dateFormat: "Y-m-d",
+                enableTime: false
+            });
         });
     </script>
 </body>

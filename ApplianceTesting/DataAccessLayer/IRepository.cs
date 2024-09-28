@@ -16,9 +16,13 @@ namespace ApplianceTesting.DataAccessLayer.Repository
     public interface IMasterControl
     {
         public List<StateModel> GetStateRecords();
-        public List<CityModel> GetCityRecords(int stateId);
+        public List<CityViewModel> GetCityRecords(int? stateId);
+        public List<LocationModel> GetLocationRecords(int cityId);
         bool InsertModel(object objModel);
         public List<NumCounts> GetCounts();
-        public List<LocationModel> GetStateCityLocRecords();
+        public List<LocationViewModel> GetStateCityLocRecords();
+
+        public List<CompanyModel> GetCompanies();
+        public bool UpdateStatusModel(string dbSetName, string idField, int id, string statusField, bool statusValue);
     }
 }

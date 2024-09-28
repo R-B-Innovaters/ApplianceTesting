@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "r3srSdT+iaQcXMp5BxxFAOXpZ9QvPAYGMnIlRaPOksg=",
+  "Hash": "quh6JKo1xhsMymgNAEEzIVuw4LRyLwrzZCdAKn3z7HI=",
   "Source": "ApplianceTesting",
   "BasePath": "_content/ApplianceTesting",
   "Mode": "Default",
@@ -100,6 +100,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\dataTables.dataTables.min.css"
+    },
+    {
+      "Identity": "D:\\BCA_MCA\\My Projects\\ApplianceTesting\\ApplianceTesting\\wwwroot\\css\\flatpickr.min.css",
+      "SourceId": "ApplianceTesting",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\BCA_MCA\\My Projects\\ApplianceTesting\\ApplianceTesting\\wwwroot\\",
+      "BasePath": "_content/ApplianceTesting",
+      "RelativePath": "css/flatpickr.min.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\flatpickr.min.css"
     },
     {
       "Identity": "D:\\BCA_MCA\\My Projects\\ApplianceTesting\\ApplianceTesting\\wwwroot\\css\\site.css",
@@ -236,6 +253,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\dataTables.min.js"
+    },
+    {
+      "Identity": "D:\\BCA_MCA\\My Projects\\ApplianceTesting\\ApplianceTesting\\wwwroot\\js\\flatpickr.js",
+      "SourceId": "ApplianceTesting",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\BCA_MCA\\My Projects\\ApplianceTesting\\ApplianceTesting\\wwwroot\\",
+      "BasePath": "_content/ApplianceTesting",
+      "RelativePath": "js/flatpickr.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\flatpickr.js"
     },
     {
       "Identity": "D:\\BCA_MCA\\My Projects\\ApplianceTesting\\ApplianceTesting\\wwwroot\\js\\JavaScript.js",
