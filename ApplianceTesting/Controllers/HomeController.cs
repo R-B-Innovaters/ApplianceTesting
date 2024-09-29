@@ -33,7 +33,7 @@ namespace ApplianceTesting.Controllers
                 if (result!=null)
                 {
                   HttpContext.Session.SetString("_username", result.Username);
-                
+                    HttpContext.Session.SetString("_userid", result.Id.ToString());
                     return RedirectToAction("Index", "Master");
                 }
                 else {

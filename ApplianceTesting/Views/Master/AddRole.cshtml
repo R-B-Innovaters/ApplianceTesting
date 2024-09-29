@@ -1,0 +1,93 @@
+﻿@model ApplianceTesting.Models.RoleModel
+
+<div class="container card p-5" style="margin-top:5%">
+    <h3>Add Role</h3>
+    <hr />
+    <form asp-action="AddRole" asp-controller="Master" method="post">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Role Id</label>
+                        <input type="number" class="form-control" asp-for="RoleId" placeholder="Enter Role Name " required>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Role Name</label>
+                        <input type="text" class="form-control" asp-for="RoleName" placeholder="Enter Role Name " required>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Status</label><br />
+                        <label class="switch">
+                            <input type="checkbox" asp-for="RoleStatus">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="row float-end">
+                    <div class="col-md-12 mb-2">
+                        <button type="reset" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table datatableCss" id="myTable">
+                    <thead>
+                        <tr>
+
+                            <th>Role Id</th>
+                            <th>RoleName</th>
+                            <th>CompanyStatus</th>
+                        </tr>
+                    </thead>
+                    @if (ViewBag.roleList != null)
+                    {
+                        foreach (var item in ViewBag.roleList)
+                        {
+                            <tr>
+                                <td>@item.RoleId</td>
+                                <td>@item.RoleName</td>
+                                <td>
+                                    <label class="switch">
+                                        <input type="checkbox" class="status-switch" data-id="@item.RoleId" data-table="RoleMaster" @(item.RoleStatus ? "checked" : "") data-idcolumn="RoleId" data-stcolumn="RoleStatus">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </table>
+            </div>
+        </div>
+    </form>
+
+    @*  <h3>Records</h3>
+    <hr />
+    <table class="table" id="myTable">
+    <thead>
+    <tr>
+    <th>State</th>
+    <th>City</th>
+    <th>Area</th>
+    </tr>
+    </thead>
+    @if (ViewBag.locations != null)
+    {
+    foreach (var item in ViewBag.locations)
+    {
+    <tr>
+    <td>@item.LocationName</td>
+    <td>@item.CityName</td>
+    <td>@item.StateName</td>
+    </tr>
+    }
+    }
+
+    </table> *@
+
+
+</div>

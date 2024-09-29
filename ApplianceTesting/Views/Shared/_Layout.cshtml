@@ -71,12 +71,31 @@
                         <i class='bx bxs-dashboard nav_icon'></i> <span class="nav_name">Dashboard</span>
                     </a>
 
+                    <a href="#" class="nav_link dropdown-toggle d-flex" id="userMenu" data-bs-toggle="collapse" data-bs-target="#submenuUsers">
+                        <i class='bx bx-navigation nav_icon'></i>
+                        <span class="nav_name">User Management</span>
+                    </a>
+                    <div id="submenuUsers" class="collapse">
+                        <a class="nav_link" asp-area="" asp-controller="Master" asp-action="AddRole">
+                            <i class='bx bx-circle nav_icon'></i>
+                            <span class="nav_name">Role Master</span>
+                        </a>
+                        <a class="nav_link" asp-area="" asp-controller="Master" asp-action="ManageCredential">
+                            <i class='bx bx-circle nav_icon'></i>
+                            <span class="nav_name">Credential Master</span>
+                        </a>
+                    </div>
+
                     <a class="nav_link" asp-area="" asp-controller="Master" asp-action="StateCityLocation">
-                        <i class='bx bxs-dashboard nav_icon'></i> <span class="nav_name">Manage Location</span>
+                        <i class='bx bx-location-plus nav_icon'></i> <span class="nav_name">Manage Location</span>
                     </a>
 
                     <a class="nav_link" asp-area="" asp-controller="Master" asp-action="AddCompany">
                         <i class='bx bxs-city nav_icon'></i> <span class="nav_name">Add Company</span>
+                    </a>
+
+                    <a class="nav_link" asp-area="" asp-controller="Master" asp-action="AddAppliances">
+                        <i class='bx bx-task nav_icon'></i> <span class="nav_name">Add Appliances</span>
                     </a>
                 </div>
             </div>
@@ -118,7 +137,13 @@
             $(document).ready(function () {
                 debugger
                 function showSuccessPopup(msg) {
-                    swal("Success", msg, "success");
+                    swal({
+                        title: 'Success',
+                        text: msg,
+                        icon: 'success'
+                    }).then(() => {
+                        location.href('/Master/AddRole/');
+                    });
                 }
 
                 function showErrorPopup(msg) {
@@ -152,7 +177,13 @@
                     },
                     success: function (response) {
                         if (response.success) {
-                            swal('Success', 'Status Updated Successfully.', 'success');
+                            swal({
+                                title: 'Success',
+                                text: 'Status Updated Successfully.',
+                                icon: 'success'
+                            }).then(() => {
+                                location.reload();
+                            });
                         } else {
                             swal('Oops', 'Error Updating Status', 'error');
                         }

@@ -1,0 +1,212 @@
+﻿@model ApplianceTesting.Models.ApplianceModel
+
+<div class="container card p-5" style="margin-top:5%">
+    <h3>Add Appliance and Assign Testing</h3>
+    <hr />
+    <form asp-action="AddAppliances" asp-controller="Master" method="post">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">State</label>
+                        <select id="StateId" name="StateId" class="form-control" onchange="fetchCities(this.value)">
+                            <option value="">-- Select State --</option>
+                            @if (ViewBag.stateList != null)
+                            {
+                                foreach (var state in ViewBag.stateList)
+                                {
+                                    <option value="@state.StateId">@state.StateName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">City</label>
+                        <select id="CityId" name="CityId" class="form-control" onchange="fetchLocations(this.value)">
+                            <option value="">-- Select City --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Location</label>
+                        <select id="LocationId" asp-for="LocationId" class="form-control">
+                            <option value="">-- Select Location --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label class="form-label">Appliance Name</label>
+                        <input type="text" class="form-control" asp-for="ApplianceName" placeholder="Enter Company Name">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Serial Number</label>
+                        <input type="text" class="form-control" asp-for="AppSerialNumber" placeholder="Enter Company Number">
+                    </div>
+                </div>
+
+                <div class="row float-end">
+                    <div class="col-md-12 mb-2">
+                        <button type="reset" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table datatableCss" id="myTable">
+                    <thead>
+                        <tr>
+                            <th>Appliance Name</th>
+                            <th>Serial number</th>
+                            <th>Location</th>
+                            <th>City</th>
+                            <th>State</th>
+                            <th>Companay</th>
+                            <th>Assign</th>
+                        </tr>
+                    </thead>
+                    @if (ViewBag.applianceList != null)
+                    {
+                        foreach (var item in ViewBag.applianceList)
+                        {
+                            <tr>
+                                <td>@item.ApplianceName</td>
+                                <td>@item.AppSerialNumber</td>
+                                <td>@item.LocationName</td>
+                                <td>@item.CityName</td>
+                                <td>@item.StateName</td>
+                                <td>
+                                    @*      <select id="CompanyId_@item.ApplianceId" name="CompanyId" class="form-control">
+                            <option value="">-- Select Company --</option>
+                            @if (ViewBag.compList != null)
+                            {
+                            foreach (var comp in ViewBag.compList)
+                            {
+                            <option value="@comp.CompanyId">@comp.CompanyName</option>
+                            }
+                            }
+                            </select> *@
+                                    <select id="CompanyId_@item.ApplianceId" name="CompanyId" class="form-control">
+                                        <option value="">-- Select Company --</option>
+                                        @if (ViewBag.compList != null)
+                                        {
+                                            foreach (var comp in ViewBag.compList)
+                                            {
+                                                if (comp.CompanyId == item.CompanyId)
+                                                {
+                                                    <option value="@comp.CompanyId" selected>@comp.CompanyName</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@comp.CompanyId">@comp.CompanyName</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    @if (item.ReqStatus == null)
+                                    {
+                                        <button type="button" class="btn btn-info" onclick="assignWork(@item.ApplianceId)">Assign</button>
+                                    }
+                                    else if (item.ReqStatus == 0)
+                                    {
+                                        <button type="button" class="btn btn-warning" disabled>Pending</button>
+                                    }
+                                    else if (item.ReqStatus == 1)
+                                    {
+                                        <button type="button" class="btn btn-success" disabled>Accepted</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </table>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<script>
+    function fetchCities(stateId) {
+        if (stateId) {
+            $.ajax({
+                url: '@Url.Action("GetCitiesByState", "Master")',
+                type: 'GET',
+                data: { stateId: stateId },
+                success: function (data) {
+                    var citySelect = $('#CityId');
+                    citySelect.empty(); // Clear existing options
+                    citySelect.append('<option value="">-- Select City --</option>');
+                    $.each(data, function (i, city) {
+                        debugger
+                        citySelect.append('<option value="' + city.id + '">' + city.name + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#CityId').empty().append('<option value="">-- Select City --</option>');
+        }
+    }
+
+    function fetchLocations(cityId) {
+        if (cityId) {
+            $.ajax({
+                url: '@Url.Action("GetLocationsByCity", "Master")',
+                type: 'GET',
+                data: { cityId: cityId },
+                success: function (data) {
+                    var locationSelect = $('#LocationId');
+                    locationSelect.empty();
+                    locationSelect.append('<option value="">-- Select Location --</option>');
+                    $.each(data, function (i, location) {
+                        debugger
+                        locationSelect.append('<option value="' + location.id + '">' + location.name + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#CityId').empty().append('<option value="">-- Select City --</option>');
+        }
+    }
+
+    function assignWork(applianceId) {
+        // Get the selected company ID based on the appliance ID
+        var companyId = document.getElementById('CompanyId_' + applianceId).value;
+
+        if (companyId === "") {
+            swal('Error', 'Please select a company.', 'error');
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("AssignWork", "Master")', // Replace "YourControllerName" with the actual controller name
+            type: 'POST',
+            data: {
+                companyId: companyId,
+                applianceId: applianceId
+            },
+            success: function (response) {
+                if (response.success) {
+                    swal({
+                        title: 'Success',
+                        text: 'Work assigned successfully!',
+                        icon: 'success'
+                    }).then(() => {
+                        location.reload(); 
+                    });
+                } else {
+                    swal('Error', 'Failed to assign work.', 'error');
+                }
+            },
+            error: function () {
+                swal('Error', 'Error while assigning work.', 'error');
+            }
+        });
+    }
+
+</script>

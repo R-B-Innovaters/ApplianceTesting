@@ -1,5 +1,6 @@
 ﻿using ApplianceTesting.Models;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.Design;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -15,7 +16,17 @@ namespace ApplianceTesting.DataAccessLayer.Repository
             _hostEnvirionment = hostEnvirionment;
             _db = db;
         }
-
+        public List<RoleModel> GetRole()
+        {
+            var roleList = _db.RoleMaster.Select(s => new { s.RoleId, s.RoleName, s.RoleStatus }).ToList();
+            List<RoleModel> rList = roleList.Select(s => new RoleModel
+            {
+                RoleId = s.RoleId,
+                RoleName = s.RoleName,
+                RoleStatus = s.RoleStatus
+            }).ToList();
+            return rList;
+        }
         public List<StateModel> GetStateRecords()
         {
             //// Mapping StateMaster to StateModel if necessary
@@ -26,12 +37,12 @@ namespace ApplianceTesting.DataAccessLayer.Repository
             //   StateName = s.StateName 
             //}).ToList();
             //return sList;
-            var stateList = _db.StateMaster.Select(s => new { s.StateId, s.StateName,s.StateStatus }).ToList();
+            var stateList = _db.StateMaster.Select(s => new { s.StateId, s.StateName, s.StateStatus }).ToList();
             List<StateModel> sList = stateList.Select(s => new StateModel
             {
                 StateId = s.StateId,
                 StateName = s.StateName,
-                StateStatus =s.StateStatus
+                StateStatus = s.StateStatus
             }).ToList();
             return sList;
         }
@@ -40,44 +51,45 @@ namespace ApplianceTesting.DataAccessLayer.Repository
         {
             if (stateId != null)
             {
-                var cityList = _db.CityMaster.Select(s => new { s.CityId, s.CityName, s.StateId,s.CityStatus }).Where(s => s.StateId == stateId).ToList();
+                var cityList = _db.CityMaster.Select(s => new { s.CityId, s.CityName, s.StateId, s.CityStatus }).Where(s => s.StateId == stateId).ToList();
                 List<CityViewModel> cList = cityList.Select(s => new CityViewModel
                 {
                     CityId = s.CityId,
                     CityName = s.CityName,
-                    CityStatus=s.CityStatus
+                    CityStatus = s.CityStatus
                 }).ToList();
                 return cList;
             }
             else
             {
                 var cityList = (from ct in _db.CityMaster
-                                 join state in _db.StateMaster on ct.StateId equals state.StateId
-                                 select new 
-                                 {
-                                     ct.CityId,
-                                     ct.CityName,
-                                     ct.CityStatus,
-                                     state.StateName
-                                 }).ToList();
+                                join state in _db.StateMaster on ct.StateId equals state.StateId
+                                select new
+                                {
+                                    ct.CityId,
+                                    ct.CityName,
+                                    ct.CityStatus,
+                                    state.StateName
+                                }).ToList();
                 List<CityViewModel> cList = cityList.Select(s => new CityViewModel
                 {
                     CityId = s.CityId,
                     CityName = s.CityName,
-                    StateName=s.StateName,
-                    CityStatus= s.CityStatus
+                    StateName = s.StateName,
+                    CityStatus = s.CityStatus
                 }).ToList();
                 return cList;
             }
-            
+
         }
         public List<LocationModel> GetLocationRecords(int cityId)
         {
-            var locationList = _db.LocationMaster.Select(s => new { s.LocationId, s.LocationName, s.CityId }).Where(s => s.CityId == cityId).ToList();
+            var locationList = _db.LocationMaster.Select(s => new { s.LocationId, s.LocationName, s.CityId,s.LocationStatus }).Where(s => s.CityId == cityId).ToList();
             List<LocationModel> lList = locationList.Select(s => new LocationModel
             {
                 LocationId = s.LocationId,
-                LocationName = s.LocationName
+                LocationName = s.LocationName,
+                LocationStatus=s.LocationStatus
             }).ToList();
 
             return lList;
@@ -92,7 +104,7 @@ namespace ApplianceTesting.DataAccessLayer.Repository
             {
                 TotalStates = stateCount,
                 TotalCities = cityCount,
-                TotalLocations = locationCount 
+                TotalLocations = locationCount
             };
 
             return new List<NumCounts> { counts };
@@ -140,7 +152,28 @@ namespace ApplianceTesting.DataAccessLayer.Repository
             }).ToList();
             return compList;
         }
+        public List<ApplianceViewModel> GetAppliances()
+        {
+            var appliances = (from app in _db.ApplianceMaster
+                              join work in _db.AssignWorkMaster on app.ApplianceId equals work.ApplianceId into workGroup
+                              from work in workGroup.DefaultIfEmpty()
+                              join location in _db.LocationMaster on app.LocationId equals location.LocationId
+                              join city in _db.CityMaster on location.CityId equals city.CityId
+                              join state in _db.StateMaster on city.StateId equals state.StateId
+                              select new ApplianceViewModel
+                              {
+                                  ApplianceId = app.ApplianceId,
+                                  ApplianceName = app.ApplianceName,
+                                  AppSerialNumber = app.AppSerialNumber,
+                                  LocationName = location.LocationName,
+                                  CityName = city.CityName,
+                                  StateName = state.StateName,
+                                  ReqStatus=work.ReqStatus,
+                                  CompanyId=work.CompanyId
+                              }).ToList();
 
+            return appliances;
+        }
         public bool InsertModel(object objModel)
         {
             try

@@ -130,8 +130,8 @@
                                     <label for="txtStateName" class="form-label">State</label>
                                     <select name="StateId" class="form-control">
                                         <option value="">-- Select State --</option>
-                                        @if (ViewBag.States != null)
-                                            foreach (var state in ViewBag.States)
+                                        @if (ViewBag.StatesDDL != null)
+                                            foreach (var state in ViewBag.StatesDDL)
                                             {
                                                 <option value="@state.StateId">@state.StateName</option>
                                             }  }
@@ -193,8 +193,8 @@
                                     <label for="txtStateName" class="form-label">State</label>
                                     <select id="StateId" name="StateId" class="form-control" onchange="fetchCities(this.value)">
                                         <option value="">-- Select State --</option>
-                                        @if (ViewBag.States != null)
-                                            foreach (var state in ViewBag.States)
+                                        @if (ViewBag.StatesDDL != null)
+                                            foreach (var state in ViewBag.StatesDDL)
                                             {
                                                 <option value="@state.StateId">@state.StateName</option>
                                             }  }

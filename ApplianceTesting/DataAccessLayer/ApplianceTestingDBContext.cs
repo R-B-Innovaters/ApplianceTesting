@@ -16,6 +16,9 @@ namespace ApplianceTesting.DataAccessLayer
         public DbSet<UserModel> UserMaster { get; set; }
         public DbSet<CompanyModel> CompanyMaster { get; set; }
         public DbSet<ContractModel> ContractMaster { get; set; }
+        public DbSet<ApplianceModel>ApplianceMaster { get; set; }
+        public DbSet<AssignWorkModel>AssignWorkMaster { get; set; }
+        public DbSet<RoleModel>RoleMaster { get; set; }
     }
 
 }

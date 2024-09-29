@@ -24,7 +24,7 @@ namespace ApplianceTesting.DataAccessLayer.Repository
         {
             try
             {
-                UserModel userModel = _db.UserMaster.Where(u=>u.Username==username).FirstOrDefault();
+                UserModel userModel = _db.UserMaster.Where(u=>u.Username==username && u.Password==password).FirstOrDefault();
                
                 return userModel;
             }
