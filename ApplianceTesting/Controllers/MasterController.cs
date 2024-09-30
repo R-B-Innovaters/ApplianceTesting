@@ -96,7 +96,8 @@ namespace ApplianceTesting.Controllers
                 ViewBag.Data = HttpContext.Session.GetString("_username").ToString();
                 ViewBag.Id = HttpContext.Session.GetString("_userid").ToString();
             }
-           
+
+            ViewBag.roleList = _masters.GetRole();
             return View();
         }
 
@@ -141,7 +142,6 @@ namespace ApplianceTesting.Controllers
             }
             //dropdown bind
             var roleList = _masters.GetRole();
-
             var filteredroleList = roleList.Select(s => new RoleModel
             {
                 RoleId = s.RoleId,
@@ -157,8 +157,7 @@ namespace ApplianceTesting.Controllers
             }).ToList();
             ViewBag.compDDL = filteredCompanies;
             //
-
-
+            ViewBag.UserList = _masters.GetUsersList();
             return View();
         }
 
@@ -169,25 +168,6 @@ namespace ApplianceTesting.Controllers
             {
                 ViewBag.Id = HttpContext.Session.GetString("_userid").ToString();
             }
-            string msg = "";
-            //if (roleDDL. != null)
-            //{
-            //    roleModel.CreatedDate = DateTime.Now;
-            //    roleModel.CreatedBy = Convert.ToInt32(ViewBag.Id);
-            //    bool result = _masters.InsertModel(roleModel);
-            //    if (result == true)
-            //    {
-            //        msg = "Record Inserted";
-            //        TempData["MsgScs"] = $"showSuccessPopup('{msg}');";
-            //    }
-            //    else
-            //    {
-            //        msg = "Oops! Error while inserting...";
-            //        TempData["MsgScs"] = $"showErrorPopup('{msg}');";
-            //    }
-            //}
-
-            string str = "";
             //dropdown bind
             var roleList = _masters.GetRole();
 
@@ -205,8 +185,32 @@ namespace ApplianceTesting.Controllers
                 CompanyName = s.CompanyName,
             }).ToList();
             ViewBag.compDDL = filteredCompanies;
+
+            ViewBag.UserList = _masters.GetUsersList();
             //
-            return View("AddRole");
+
+            userModel.CreatedDate = DateTime.Now;
+            userModel.CreatedBy = Convert.ToInt32(ViewBag.Id);
+            var company = compList.FirstOrDefault(c => c.CompanyId == userModel.CompanyId);
+            userModel.Email = company.CompanyEmail;
+            userModel.Username = company.CompanyName;
+            userModel.Password = Convert.ToDateTime(company.CompRegistrationDate).ToString("ddMMyy");
+            userModel.isActive = true;
+
+            string msg = "";
+            bool result = _masters.InsertModel(userModel);
+            if (result == true)
+            {
+                msg = "Record Inserted. Company Username is its Email Id and Password is "+ userModel.Password;
+                TempData["MsgScs"] = $"showSuccessPopup('{msg}');";
+            }
+            else
+            {
+                msg = "Oops! Error while inserting...";
+                TempData["MsgScs"] = $"showErrorPopup('{msg}');";
+            }
+
+            return View("ManageCredential");
         }
         public IActionResult StateCityLocation()
         {

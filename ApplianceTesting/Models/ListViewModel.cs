@@ -33,5 +33,16 @@ namespace ApplianceTesting.Models
         public int? CompanyId { get; set; }
 
     }
+
+    public class UserViewModel
+    {
+        public int UserId { get; set; }
+        public string? Username { get; set; }
+        public string? Email { get; set; }
+        public string? Password { get; set; }
+        public string? RoleName { get; set; }
+        public bool? isActive { get; set; }
+       
+    }
 }
 

@@ -16,6 +16,7 @@ namespace ApplianceTesting.DataAccessLayer.Repository
     public interface IMasterControl
     {
         public List<RoleModel> GetRole();
+        public List<UserViewModel> GetUsersList();
         public List<StateModel> GetStateRecords();
         public List<CityViewModel> GetCityRecords(int? stateId);
         public List<LocationModel> GetLocationRecords(int cityId);

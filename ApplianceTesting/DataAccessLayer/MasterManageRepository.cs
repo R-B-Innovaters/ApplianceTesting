@@ -125,6 +125,22 @@ namespace ApplianceTesting.DataAccessLayer.Repository
 
             return locations;
         }
+        public List<UserViewModel> GetUsersList()
+        {
+            var users = (from user in _db.UserMaster
+                             join role in _db.RoleMaster on user.RoleId equals role.RoleId
+                             select new UserViewModel
+                             {
+                                 UserId = user.UserId,
+                                 Username=user.Username,
+                                 RoleName = role.RoleName,
+                                 isActive= user.isActive,
+                                 Email=user.Email,
+                                 Password=user.Password
+                             }).ToList();
+
+            return users;
+        }
         public List<CompanyModel> GetCompanies()
         {
             var c_list = from l in _db.CompanyMaster

@@ -18,8 +18,6 @@ namespace ApplianceTesting.Controllers
             _i_homeInterfacce = i_homeInterfacce;
         
         }
-
-
         public IActionResult Login()
         {
             return View();
@@ -33,7 +31,7 @@ namespace ApplianceTesting.Controllers
                 if (result!=null)
                 {
                   HttpContext.Session.SetString("_username", result.Username);
-                    HttpContext.Session.SetString("_userid", result.Id.ToString());
+                    HttpContext.Session.SetString("_userid", result.UserId.ToString());
                     return RedirectToAction("Index", "Master");
                 }
                 else {
